@@ -1,0 +1,12 @@
+﻿{
+  "name": "schemaguard-validator",
+  "version": "1.0.0",
+  "description": "High-speed schema validator preventing malformed payload attacks with type-safe AST verification.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node tests/run_tests.js"
+  },
+  "author": "Ali Nurettin Demir",
+  "license": "MIT"
+}
