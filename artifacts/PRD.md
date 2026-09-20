@@ -1,4 +1,4 @@
-﻿# ğŸ“Š Product Requirements Document (PRD): SchemaGuard-Validator
+﻿# 📊 Product Requirements Document (PRD): SchemaGuard-Validator
 - **Project:** SchemaGuard-Validator
 - **Author:** Expert Business Analyst
 - **Status:** APPROVED & COMPLETE
