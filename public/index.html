@@ -1,36 +1,128 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SchemaGuard-Validator | Operational Studio</title>
+  <title>SchemaGuard-Validator | Pure JSON Schema & RFC 6901 Engine Studio</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <header class="header">
     <div class="brand">
-      <span class="logo">⚡</span>
+      <div class="logo-box">🛡️</div>
       <div>
-        <h1>SchemaGuard-Validator</h1>
-        <span class="sub">Zero-Cost Universal JSON & GraphQL Schema Validator</span>
+        <h1>SchemaGuard-Validator <span class="badge-v">v2.0.0</span></h1>
+        <span class="sub">Pure JSON Schema Engine, RFC 6901 Pointer Diagnostics & Payload Sanitizer</span>
       </div>
     </div>
-    <div class="status-badge">🟢 Operational Active</div>
+    <div class="header-right">
+      <div class="preset-selector">
+        <label for="schemaPresetSelect">Template:</label>
+        <select id="schemaPresetSelect">
+          <option value="user">User Registration</option>
+          <option value="order">E-Commerce Order</option>
+          <option value="strict">Strict API Request</option>
+        </select>
+      </div>
+      <div class="status-pill"><span class="dot"></span> VALIDATOR READY</div>
+    </div>
   </header>
+
   <main class="main">
-    <div class="card">
-      <h2>Engine Overview</h2>
-      <p>High-speed schema validator preventing malformed payload attacks with type-safe AST verification.</p>
-      <div class="metrics-row" id="metricsRow">
-        <div class="metric"><span class="lbl">STATUS</span><span class="val">HEALTHY</span></div>
-        <div class="metric"><span class="lbl">LATENCY</span><span class="val">1.2 ms</span></div>
-        <div class="metric"><span class="lbl">THROUGHPUT</span><span class="val">1,250 req/s</span></div>
+    <!-- Telemetry Cards -->
+    <section class="telemetry-grid">
+      <div class="stat-card">
+        <span class="stat-label">REGISTERED SCHEMAS</span>
+        <span class="stat-value text-accent" id="statSchemas">--</span>
+        <span class="stat-sub">Precompiled in-memory catalog</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">TOTAL VALIDATIONS</span>
+        <span class="stat-value" id="statValidations">--</span>
+        <span class="stat-sub">Across runtime lifecycle</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">PASS RATE</span>
+        <span class="stat-value text-success" id="statPassRate">--%</span>
+        <span class="stat-sub" id="statPassedSub">-- passed</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">ENGINE LATENCY</span>
+        <span class="stat-value" id="statLatency">&lt; 0.1 ms</span>
+        <span class="stat-sub">Sub-millisecond AST evaluation</span>
+      </div>
+    </section>
+
+    <!-- Side-by-Side Editor Grid -->
+    <div class="editor-grid">
+      <!-- Left: JSON Schema Editor -->
+      <div class="panel-card editor-panel">
+        <div class="panel-header flex-between">
+          <h3>📐 JSON Schema Definition</h3>
+          <span class="badge-tag">JSON Schema Draft-07 / 2020-12</span>
+        </div>
+        <textarea id="schemaTextarea" spellcheck="false" placeholder="Enter JSON Schema..."></textarea>
+      </div>
+
+      <!-- Right: Data Payload Editor -->
+      <div class="panel-card editor-panel">
+        <div class="panel-header flex-between">
+          <h3>📦 JSON Data Instance (Payload)</h3>
+          <span class="badge-tag">Input Subject</span>
+        </div>
+        <textarea id="dataTextarea" spellcheck="false" placeholder="Enter Data JSON..."></textarea>
       </div>
     </div>
+
+    <!-- Action Controls -->
+    <div class="actions-row">
+      <button id="validateBtn" class="btn-primary">⚡ Validate Schema (RFC 6901)</button>
+      <button id="sanitizeBtn" class="btn-secondary">🧹 Sanitize & Strip Unknown Fields</button>
+    </div>
+
+    <!-- Validation Verdict & RFC 6901 Error Path Diagnostics -->
+    <section class="panel-card">
+      <div class="panel-header flex-between">
+        <h3>🔬 Diagnostics & Error Path Inspector</h3>
+        <span id="verdictBadge" class="verdict-badge pending">Awaiting Validation</span>
+      </div>
+      <div class="diagnostics-content">
+        <div id="verdictBanner" class="verdict-banner pending">
+          Click "Validate Schema" above to evaluate the payload against the schema definition.
+        </div>
+        <div class="errors-table-wrap" id="errorsTableWrap" style="display:none;">
+          <table class="errors-table">
+            <thead>
+              <tr>
+                <th>JSON Pointer Path (RFC 6901)</th>
+                <th>Violated Keyword</th>
+                <th>Diagnostic Message</th>
+                <th>Expected vs Actual</th>
+              </tr>
+            </thead>
+            <tbody id="errorsTableBody"></tbody>
+          </table>
+        </div>
+        <div id="sanitizedResultWrap" class="sanitized-box" style="display:none;">
+          <div class="sanitized-title">Sanitized Payload Output (Cleaned):</div>
+          <pre id="sanitizedJsonOutput"></pre>
+        </div>
+      </div>
+    </section>
   </main>
+
   <footer class="footer">
-    <p>SchemaGuard-Validator &bull; Autonomously engineered by 7-Agent SDLC Factory for <a href="https://github.com/alinurettin/SchemaGuard-Validator" target="_blank">Ali Nurettin Demir</a></p>
+    <div class="footer-content">
+      <span>SchemaGuard-Validator v2.0.0 &bull; Autonomously engineered by 7-Agent SDLC Software Factory</span>
+      <a href="https://github.com/alinurettin/SchemaGuard-Validator" target="_blank" class="github-link">
+        GitHub: @alinurettin/SchemaGuard-Validator
+      </a>
+    </div>
   </footer>
+
   <script src="app.js"></script>
 </body>
 </html>
