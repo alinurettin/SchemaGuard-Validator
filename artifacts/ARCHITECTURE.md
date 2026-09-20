@@ -1,4 +1,4 @@
-﻿# ğŸ“ System Architecture Document: SchemaGuard-Validator
+﻿# 📐 System Architecture Document: SchemaGuard-Validator
 - **Project:** SchemaGuard-Validator
 - **Author:** Expert Software Architect
 - **Status:** APPROVED & COMPLETE
